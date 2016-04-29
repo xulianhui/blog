@@ -1,0 +1,66 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'D:\\Program Files\\nodejs\\node.exe',
+1 verbose cli   'D:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js',
+1 verbose cli   'install',
+1 verbose cli   'connet-flash',
+1 verbose cli   '--save' ]
+2 info using npm@2.14.20
+3 info using node@v4.4.1
+4 verbose install initial load of E:\proj\blog\package.json
+5 verbose installManyTop reading scoped package data from E:\proj\blog\node_modules\body-parser\package.json
+6 verbose installManyTop reading scoped package data from E:\proj\blog\node_modules\connect-flash\package.json
+7 verbose installManyTop reading scoped package data from E:\proj\blog\node_modules\cookie-parser\package.json
+8 verbose installManyTop reading scoped package data from E:\proj\blog\node_modules\debug\package.json
+9 verbose installManyTop reading scoped package data from E:\proj\blog\node_modules\ejs\package.json
+10 verbose installManyTop reading scoped package data from E:\proj\blog\node_modules\express\package.json
+11 verbose installManyTop reading scoped package data from E:\proj\blog\node_modules\morgan\package.json
+12 verbose installManyTop reading scoped package data from E:\proj\blog\node_modules\serve-favicon\package.json
+13 info package.json connect-flash@0.1.1 No license field.
+14 verbose readDependencies loading dependencies from E:\proj\blog\package.json
+15 silly cache add args [ 'connet-flash', null ]
+16 verbose cache add spec connet-flash
+17 silly cache add parsed spec Result {
+17 silly cache add   raw: 'connet-flash',
+17 silly cache add   scope: null,
+17 silly cache add   name: 'connet-flash',
+17 silly cache add   rawSpec: '',
+17 silly cache add   spec: 'latest',
+17 silly cache add   type: 'tag' }
+18 silly addNamed connet-flash@latest
+19 verbose addNamed "latest" is being treated as a dist-tag for connet-flash
+20 info addNameTag [ 'connet-flash', 'latest' ]
+21 silly mapToRegistry name connet-flash
+22 silly mapToRegistry using default registry
+23 silly mapToRegistry registry https://registry.npmjs.org/
+24 silly mapToRegistry uri https://registry.npmjs.org/connet-flash
+25 verbose addNameTag registry:https://registry.npmjs.org/connet-flash not in flight; fetching
+26 verbose request uri https://registry.npmjs.org/connet-flash
+27 verbose request no auth needed
+28 info attempt registry request try #1 at 12:27:09
+29 verbose request id 0fe26f6acca62dab
+30 http request GET https://registry.npmjs.org/connet-flash
+31 info retry will retry, error on last attempt: Error: read ECONNRESET
+32 info attempt registry request try #2 at 12:27:41
+33 http request GET https://registry.npmjs.org/connet-flash
+34 info retry will retry, error on last attempt: Error: read ECONNRESET
+35 info attempt registry request try #3 at 12:29:44
+36 http request GET https://registry.npmjs.org/connet-flash
+37 verbose stack Error: read ECONNRESET
+37 verbose stack     at exports._errnoException (util.js:870:11)
+37 verbose stack     at TLSWrap.onread (net.js:550:26)
+38 verbose cwd E:\proj\blog
+39 error Windows_NT 10.0.10586
+40 error argv "D:\\Program Files\\nodejs\\node.exe" "D:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "install" "connet-flash" "--save"
+41 error node v4.4.1
+42 error npm  v2.14.20
+43 error code ECONNRESET
+44 error errno ECONNRESET
+45 error syscall read
+46 error network read ECONNRESET
+46 error network This is most likely not a problem with npm itself
+46 error network and is related to network connectivity.
+46 error network In most cases you are behind a proxy or have bad network settings.
+46 error network
+46 error network If you are behind a proxy, please make sure that the
+46 error network 'proxy' config is set properly.  See: 'npm help config'
+47 verbose exit [ 1, true ]
