@@ -54,6 +54,8 @@ user.get = function(name, callback) {
           // console.log(err);
           return callback(err, null);
         } else {
+          console.log('[res]:___');
+          console.log(res);
           callback(null, res);
         }
       });

@@ -5,11 +5,21 @@ var user = require('../modules/user');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Index' });
+  res.render('index', {
+    title: 'Index',
+    user: req.session.user,
+    success: req.flash('success').toString(),
+    error: req.flash('error').toString()
+  });
 });
 
 router.get('/reg', function(req, res) {
-	res.render('reg', {title: 'Regist'});
+  res.render('reg', {
+    title: 'Regist',
+    user: req.session.user,
+    success: req.flash('success').toString(),
+    error: req.flash('error').toString()
+  });
 });
 
 router.post('/reg', function(req, res) {
@@ -21,7 +31,7 @@ router.post('/reg', function(req, res) {
 
   if (password != password_rep) {
     console.log('error ' + '两次输入的密码不一致!');
-    req.flash('error', err);
+    req.flash('error', '两次输入的密码不一致!');
     return res.redirect('/reg');
   }
 
@@ -49,6 +59,9 @@ router.post('/reg', function(req, res) {
         console.log('[error]:____ ');
         console.log(err);
       }
+      req.session.user = newUser;
+      console.log('[session]:___');
+      console.log(req.session.user);
       console.log('regist success!');
       res.redirect('/');
     });
@@ -56,11 +69,31 @@ router.post('/reg', function(req, res) {
 });
 
 router.get('/login', function(res, req) {
-	req.render('login', {title: 'Login'});
+  res.render('login', {
+    title: 'Login',
+    user: req.session.user,
+    success: req.flash('success').toString(),
+    error: req.flash('error').toString()
+  });
 });
 
 router.post('/login', function(res, req) {
-
+  var name = req.body.name;
+  var password = req.body.password;
+  user.get(name, function (err, user) {
+    if (err) {
+      console.log('[error]:___');
+      console.log(err);
+    } else {
+      if (user.password != password) {
+        req.flash('error', 'password error');
+        return res.redirect('/login');
+      }
+      req.session.user = user;
+      req.flash('success', 'Successfuly login');
+      return res.redirect('/');
+    }
+  });
 });
 
 router.get('/post', function(res, req) {
