@@ -3,4 +3,4 @@ module.exports = {
     user     : 'xuelanghu',
     password : '0407',
     database : 'myblog'
-  };
+};
