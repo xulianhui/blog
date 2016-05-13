@@ -68,7 +68,7 @@ router.post('/reg', function(req, res) {
   });
 });
 
-router.get('/login', function(res, req) {
+router.get('/login', function(req, res) {
   res.render('login', {
     title: 'Login',
     user: req.session.user,
@@ -77,32 +77,41 @@ router.get('/login', function(res, req) {
   });
 });
 
-router.post('/login', function(res, req) {
+router.post('/login', function(req, res) {
   var name = req.body.name;
   var password = req.body.password;
-  user.get(name, function (err, user) {
+  user.get(name, function (err, _user) {
     if (err) {
       console.log('[error]:___');
       console.log(err);
+    } else if (_user == '[]') {
+      console.log('[user]:___');
+      console.log(_user);
+      req.flash('error', 'no such user');
+      return res.redirect('/login');
     } else {
-      if (user.password != password) {
+      if (_user.password != password) {
         req.flash('error', 'password error');
         return res.redirect('/login');
       }
-      req.session.user = user;
+      req.session.user = _user;
       req.flash('success', 'Successfuly login');
       return res.redirect('/');
     }
   });
 });
 
-router.get('/post', function(res, req) {
+router.get('/post', function(req, res) {
 	res.render('post', {title: 'Post'});
 });
 
-router.post('/post', function(res, req) {
+router.post('/post', function(req, res) {
 });
 
-router.get('/logout', function(res, req) {
+router.get('/logout', function(req, res) {
+  req.session.user = null;
+  req.flash('success', 'Successfuly logout');
+  res.redirect('/');
 });
+
 module.exports = router;

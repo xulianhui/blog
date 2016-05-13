@@ -56,7 +56,12 @@ user.get = function(name, callback) {
         } else {
           console.log('[res]:___');
           console.log(res);
-          callback(null, res);
+          var _user = {
+            name: res[0].name,
+            password: res[0].password,
+            email: res[0].email
+          };
+          callback(null, _user);
         }
       });
     }
