@@ -1,9 +1,9 @@
 var express = require('express');
-var router = express.Router();
 var crypto = require('crypto');
 var user = require('../modules/user');
 
-/* GET home page. */
+var router = express.Router();
+
 router.get('/', function(req, res, next) {
   res.render('index', {
     title: 'Index',
@@ -13,6 +13,7 @@ router.get('/', function(req, res, next) {
   });
 });
 
+router.get('/reg', checkNotLogin);
 router.get('/reg', function(req, res) {
   res.render('reg', {
     title: 'Regist',
@@ -22,6 +23,7 @@ router.get('/reg', function(req, res) {
   });
 });
 
+router.post('/reg', checkNotLogin);
 router.post('/reg', function(req, res) {
   console.log('reg: ------------------');
   var name = req.body.name;
@@ -68,6 +70,7 @@ router.post('/reg', function(req, res) {
   });
 });
 
+router.get('/login', checkNotLogin);
 router.get('/login', function(req, res) {
   res.render('login', {
     title: 'Login',
@@ -77,6 +80,7 @@ router.get('/login', function(req, res) {
   });
 });
 
+router.post('/login', checkNotLogin);
 router.post('/login', function(req, res) {
   var name = req.body.name;
   var password = req.body.password;
@@ -101,17 +105,41 @@ router.post('/login', function(req, res) {
   });
 });
 
+router.get('/post', checkLogin);
 router.get('/post', function(req, res) {
-	res.render('post', {title: 'Post'});
+	res.render('post', {
+    title: 'Post',
+    user: req.session.user,
+    success: req.flash('success').toString(),
+    error: req.flash('error').toString()
+  });
 });
 
+router.post('/post', checkLogin);
 router.post('/post', function(req, res) {
 });
 
+router.get('/logout', checkLogin);
 router.get('/logout', function(req, res) {
   req.session.user = null;
   req.flash('success', 'Successfuly logout');
   res.redirect('/');
 });
+
+function checkLogin(req, res, next) {
+  if (!req.session.user) {
+    req.flash('error', 'Please login first');
+    res.redirect('/login');
+  }
+  next();
+};
+
+function checkNotLogin(req, res, next) {
+  if (req.session.user) {
+    req.flash('error', 'You have logged');
+    res.redirect('back');
+  }
+  next();
+}
 
 module.exports = router;
