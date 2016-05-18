@@ -34,7 +34,7 @@ user.prototype.save = function(callback) {
         } else {
           callback(null, res);
         }
-      }) ;
+      });
     }
   });
 };

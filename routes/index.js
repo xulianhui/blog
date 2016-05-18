@@ -1,16 +1,35 @@
 var express = require('express');
 var crypto = require('crypto');
 var user = require('../modules/user');
+var post = require('../modules/post')
 
 var router = express.Router();
 
 router.get('/', function(req, res, next) {
-  res.render('index', {
-    title: 'Index',
-    user: req.session.user,
-    success: req.flash('success').toString(),
-    error: req.flash('error').toString()
+  console.log(req.session.user);
+
+  var name = '';
+  if (req.session.user == null) {
+    name = null;
+  } else {
+    name = req.session.user.name;
+  }
+  post.get(name, function (err, _post) {
+    if (err) {
+      _post = [];
+    }
+    console.log('[_post]:___');
+    console.log(_post);
+    res.render('index', {
+      title: 'Index',
+      user: req.session.user,
+      success: req.flash('success').toString(),
+      error: req.flash('error').toString(),
+      posts: _post
+    });
+
   });
+
 });
 
 router.get('/reg', checkNotLogin);
@@ -117,6 +136,21 @@ router.get('/post', function(req, res) {
 
 router.post('/post', checkLogin);
 router.post('/post', function(req, res) {
+  var _user = req.session.user;
+  var _post = new post({
+    name: _user.name,
+    title: req.body.title,
+    post: req.body.post
+  });
+
+  _post.save(function(err, result) {
+    if (err) {
+      req.flash('error', err);
+      return res.redirect('/');
+    }
+    req.flash('success', '发布成功!');
+    res.redirect('/');
+  });
 });
 
 router.get('/logout', checkLogin);
