@@ -1,6 +1,6 @@
 var pools = require('./pools');
 var moment = require('moment');
-
+var markdown = require('markdown').markdown;
 
 var post = function (post) {
   this.name = post.name;
@@ -52,11 +52,14 @@ post.get = function(name, callback) {
     if (err) {
       console.log(err);
     } else {
-      con.query(querystr, function(err, res) {
+      con.query(querystr, function(err, docs) {
         if (err) {
           return callback(err, null);
         } else {
-          callback(null, res);
+          docs.forEach(function(doc) {
+            doc.post = markdown.toHTML(doc.post);
+          });
+          callback(null, docs);
         }
       });
     }
