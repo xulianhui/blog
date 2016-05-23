@@ -52,6 +52,7 @@ post.getall = function(name, callback) {
       console.log(err);
     } else {
       con.query(querystr, function(err, docs) {
+        con.release();
         if (err) {
           return callback(err, null);
         } else {
@@ -66,7 +67,6 @@ post.getall = function(name, callback) {
 }
 
 post.getone = function(name, title, callback) {
-  // console.log(name + ' ' + time + ' ' + titile);
   var querystr = 'select * from post where name = "' + name + '" and title = "' + title + '"';
   console.log(querystr);
 
@@ -74,7 +74,8 @@ post.getone = function(name, title, callback) {
     if (err) console.log(err);
     else {
       con.query(querystr, function (err, doc) {
-        if (err) callback(err, null);console.log('-_-');
+        con.release();
+        if (err) callback(err, null);
         console.log(doc);
         var _post = {
           name: doc[0].name,
@@ -84,6 +85,66 @@ post.getone = function(name, title, callback) {
         };
         _post.post = markdown.toHTML(_post.post);
         callback(null, _post);
+      });
+    }
+  });
+}
+
+post.edit = function(name, title, callback) {
+  var querystr = 'select * from post where name = "' + name + '" and title = "' + title + '"';
+  console.log(querystr);
+
+  pools.getConnection(function(err, con) {
+    if (err) console.log(err);
+    else {
+      con.query(querystr, function (err, doc) {
+        con.release();
+        if (err) callback(err, null);
+        console.log(doc);
+        var _post = {
+          name: doc[0].name,
+          time: doc[0].time,
+          title: doc[0].title,
+          post: doc[0].post
+        };
+
+        callback(null, _post);
+      });
+    }
+  });
+}
+
+post.update = function (name, title, post, callback) {
+  var querystr = 'update post set post = "' + post + '"' +
+                 'where name = "' + name + '" and title = "' + title + '"';
+  pools.getConnection(function(err, con) {
+    if (err) console.log(err);
+    else {
+      con.query(querystr, function(err, doc) {
+        con.release();
+        if (err) {
+          callback(err, null);
+        } else {
+          callback(null, doc);
+        }
+      })
+    }
+  });
+}
+
+post.remove = function (name, title, callback) {
+  var querystr = 'delete from post ' +
+                 'where name = "' + name + '" and title = "' + title + '"';
+  pools.getConnection(function(err, con) {
+    if (err) console.log(err);
+    else {
+      con.query(querystr, function(err, resu) {
+        con.release();
+        if (err) {
+          callback(err, null);
+        } else {
+          callback(null, resu);
+        }
       });
     }
   });

@@ -214,6 +214,57 @@ router.get('/u/:name/:title', function(req, res) {
   });
 });
 
+router.get('/edit/:name/:title', checkLogin);
+router.get('/edit/:name/:title', function(req, res) {
+  var _user = req.session.user;
+  post.edit(_user.name, req.params.title, function (err, post) {
+    if (err) {
+      console.log(err);
+      return res.redirect('back');
+    } else {
+      res.render('edit', {
+        title: 'Edit',
+        post: post,
+        user: req.session.user,
+        user : req.session.user,
+        success : req.flash('success').toString(),
+        error : req.flash('error').toString()
+      });
+    }
+  });
+});
+
+router.post('/edit/:name/:title', checkLogin);
+router.post('/edit/:name/:title', function(req, res) {
+  var _user = req.session.user;
+  post.update(_user.name, req.params.title, req.body.post, function (err, resu) {
+    var url = encodeURI('/u/' + req.params.name + '/' + req.params.title);
+    if (err) {
+      req.flash('error', err);
+      return res.redirect(url);//出错！返回文章页
+    }
+    req.flash('success', '修改成功!');
+    res.redirect(url);//成功！返回文章页
+  });
+});
+
+router.get('/remove/:name/:title', checkLogin);
+router.get('/remove/:name/:title', function(req, res) {
+  var _user = req.session.user;
+
+  post.remove(_user.name, req.params.title, function(err, resu) {
+    if (err) {
+      console.log(err);
+      return res.redirect('back');
+    } else {
+      req.flash('success', 'remove Successfuly!');
+      res.redirect('/');
+    }
+  });
+});
+
+
+
 function checkLogin(req, res, next) {
   if (!req.session.user) {
     req.flash('error', 'Please login first');
