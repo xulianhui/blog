@@ -42,12 +42,11 @@ post.prototype.save = function(callback) {
   });
 };
 
-post.get = function(name, callback) {
-  if (name == null) {
-    return callback(null, []);
-  }
+post.getall = function(name, callback) {
   console.log('name: ' + name);
-  var querystr = 'select * from post where name = "' + name + '"';
+  var querystr = 'select * from post'
+  if (name != null) querystr += ' where name = "' + name + '"';
+  console.log(querystr);
   pools.getConnection(function(err, con) {
     if (err) {
       console.log(err);
@@ -61,6 +60,30 @@ post.get = function(name, callback) {
           });
           callback(null, docs);
         }
+      });
+    }
+  });
+}
+
+post.getone = function(name, title, callback) {
+  // console.log(name + ' ' + time + ' ' + titile);
+  var querystr = 'select * from post where name = "' + name + '" and title = "' + title + '"';
+  console.log(querystr);
+
+  pools.getConnection(function(err, con) {
+    if (err) console.log(err);
+    else {
+      con.query(querystr, function (err, doc) {
+        if (err) callback(err, null);console.log('-_-');
+        console.log(doc);
+        var _post = {
+          name: doc[0].name,
+          time: doc[0].time,
+          title: doc[0].title,
+          post: doc[0].post
+        };
+        _post.post = markdown.toHTML(_post.post);
+        callback(null, _post);
       });
     }
   });

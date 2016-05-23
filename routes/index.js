@@ -14,7 +14,9 @@ router.get('/', function(req, res, next) {
   } else {
     name = req.session.user.name;
   }
-  post.get(name, function (err, _post) {
+  console.log('[name]:__');
+  console.log(name);
+  post.getall(name, function (err, _post) {
     if (err) {
       _post = [];
     }
@@ -158,6 +160,58 @@ router.get('/logout', function(req, res) {
   req.session.user = null;
   req.flash('success', 'Successfuly logout');
   res.redirect('/');
+});
+
+router.get('/u/:name', function(req, res) {
+  user.get(req.params.name, function(err, _user) {
+    if(err) {
+      console.log('[error]:___');
+      console.log(err);
+      return res.redirect('/');
+    } else if (_user == '[]') {
+      console.log('no such user');
+      return res.redirect('/');
+    }
+    post.getall(_user.name, function(err, posts) {
+      if (err) {
+        console.log(err);
+        return res.redirect('/');
+      }
+      res.render('user', {
+        title: _user.name,
+        posts: posts,
+        user : req.session.user,
+        success : req.flash('success').toString(),
+        error : req.flash('error').toString()
+      });
+    });
+  });
+});
+
+router.get('/u/:name/:title', function(req, res) {
+  user.get(req.params.name, function (err, _user) {
+    if(err) {
+      console.log('[error]:___');
+      console.log(err);
+      return res.redirect('/');
+    } else if (_user == '[]') {
+      console.log('no such user');
+      return res.redirect('/');
+    }
+    post.getone(_user.name, req.params.title, function(err, post) {
+      if (err) {
+        console.log(err);
+        return res.redirect('/');
+      }
+      res.render('article', {
+        title: post.title,
+        post: post,
+        user : req.session.user,
+        success : req.flash('success').toString(),
+        error : req.flash('error').toString()
+      });
+    })
+  });
 });
 
 function checkLogin(req, res, next) {
